@@ -9,14 +9,14 @@ import ARKit
 import RealityKit
 import SwiftUI
 
-// MARK: - ARDefaultView
+// MARK: - CabinetDetectionView
 
 struct CabinetDetectionView: View {
     @Binding var findObjectName: String?
     @Binding var foundObject: Bool
 
     var body: some View {
-        ARViewContainer(findObjectName: $findObjectName, foundObject: $foundObject)
+        CabinetViewContainer(findObjectName: $findObjectName, foundObject: $foundObject)
             .ignoresSafeArea()
             .onAppear {
                 self.foundObject = false
@@ -29,9 +29,9 @@ struct CabinetDetectionView: View {
     }
 }
 
-// MARK: - ARViewContainer
+// MARK: - CabinetViewContainer
 
-struct ARViewContainer: UIViewRepresentable {
+struct CabinetViewContainer: UIViewRepresentable {
     @Binding var findObjectName: String?
     @Binding var foundObject: Bool
 
@@ -53,11 +53,11 @@ struct ARViewContainer: UIViewRepresentable {
     // MARK: - Coordinator
 
     final class Coordinator: NSObject {
-        var parent: ARViewContainer
+        var parent: CabinetViewContainer
         @Binding var findObjectName: String?
         @Binding private var foundObject: Bool
 
-        init(_ parent: ARViewContainer, findObjectName: Binding<String?>, foundObject: Binding<Bool>) {
+        init(_ parent: CabinetViewContainer, findObjectName: Binding<String?>, foundObject: Binding<Bool>) {
             self.parent = parent
             self._findObjectName = findObjectName
             self._foundObject = foundObject
