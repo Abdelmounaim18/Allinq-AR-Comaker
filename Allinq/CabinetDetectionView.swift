@@ -36,13 +36,13 @@ struct CabinetViewContainer: UIViewRepresentable {
     @Binding var foundObject: Bool
 
     func makeUIView(context: Context) -> ARView {
-        ARSessionManager.shared.startSession(findObjectName: $findObjectName, foundObject: $foundObject)
+//        ARSessionManager.shared.startSession(findObjectName: $findObjectName, foundObject: $foundObject)
         return ARSessionManager.shared.arView
     }
 
     func updateUIView(_ uiView: ARView, context: Context) {
         if findObjectName != nil {
-            ARSessionManager.shared.stopSession()
+//            ARSessionManager.shared.stopSession()
         }
     }
 

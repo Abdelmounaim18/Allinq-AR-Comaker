@@ -205,6 +205,7 @@ struct TaskDetailView: View {
                     Button("Start", action: {
                         UIImpactFeedbackGenerator(style: .light).impactOccurred()
                         self.isCardPresented = false
+                        isNavigationActive = true
                     })
                 }.buttonStyle(SOCActionButton()).disabled(!foundObject)
 //                Button("Start", action: {

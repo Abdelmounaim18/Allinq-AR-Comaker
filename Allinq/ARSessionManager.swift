@@ -15,7 +15,7 @@ import Vision
 
 class ARSessionManager: NSObject, ARSessionDelegate {
     static let shared = ARSessionManager()
-    let log = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "visionRequestResult")
+    let log = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "ARSessionManager")
 
     var session: ARSession?
     var visionRequests = [VNRequest]()
@@ -35,6 +35,7 @@ class ARSessionManager: NSObject, ARSessionDelegate {
         session?.run(ARWorldTrackingConfiguration())
         arView.session.run(ARWorldTrackingConfiguration())
         startClassification(findObjectName: findObjectName, foundObject: foundObject)
+        os_log("-- Session Started --")
     }
 
     // MARK: - Stop Session
@@ -45,6 +46,7 @@ class ARSessionManager: NSObject, ARSessionDelegate {
         session = nil
         stopTimer()
         stopVision()
+        os_log("-- Session Stopped --")
     }
 
     private func stopVision() {
