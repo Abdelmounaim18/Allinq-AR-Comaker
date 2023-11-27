@@ -14,6 +14,7 @@ struct Task: Identifiable {
     var icon: String
     var description: String
     var imageName: String
+    var assignment: [String]
 }
 
 // MARK: - TaskView + Task Items
@@ -32,31 +33,37 @@ struct TasksView: View {
             title: "Cable Swap",
             icon: "cable.coaxial",
             description: "Replacing A FibreOptic Cable",
-            imageName: "cableSwap"
+            imageName: "cableSwap",
+            assignment: ["Cable", "Cable", "Cabinets"]
+            
         ),
         Task(
             title: "Patch Panel",
             icon: "xserve",
             description: "Installation of Patch Panel",
-            imageName: "patchPanelInstall"
+            imageName: "patchPanelInstall",
+            assignment: ["Cabinets", "PowerSupply", "PowerConnector", "Cabinets"]
         ),
         Task(
             title: "Fibre Switch",
             icon: "server.rack",
             description: "Adding Fibre Switch",
-            imageName: "fibreSwitch"
+            imageName: "fibreSwitch",
+            assignment: ["Cable", "PowerConnector", "Cable", "Cabinets"]
         ),
         Task(
             title: "Cabinet",
             icon: "power.circle",
             description: "Turn Off Cabinet For Maintenance",
-            imageName: "psuRack"
+            imageName: "psuRack",
+            assignment: ["PowerSupply", "Cabinets"]
         ),
         Task(
             title: "Power Strip",
             icon: "poweroutlet.strip",
             description: "Connect Module to Power Grid",
-            imageName: "powerStrip"
+            imageName: "powerStrip",
+            assignment: ["Cabinets", "PowerSupply", "Cable", "PowerConnector", "Cable", "Cabinets"]
         ),
     ]
     
@@ -102,16 +109,9 @@ struct TaskCard: View {
     
     var body: some View {
         ZStack {
-            Image(task.imageName)
-                .resizable()
-                .scaledToFill()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .edgesIgnoringSafeArea(.all)
-            
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(
-                    Color.black
-                        .opacity(0.5)
+                .fill(Color.white
+                    .opacity(0.2)
                 )
                 .frame(height: 120)
             
@@ -158,8 +158,8 @@ struct TaskDetailView: View {
     var body: some View {
         VStack(alignment: .center, spacing: 25) {
             VStack {
-                Text("Task").font(.system(size: 28, weight: .bold))
-                Text(task.description)
+                Text(task.title).font(.system(size: 28, weight: .bold))
+                Text(foundObject ? "Found!" : "Point camera at Cabinet").font(.callout)
             }
             
             ZStack {
@@ -186,35 +186,13 @@ struct TaskDetailView: View {
                                 UINotificationFeedbackGenerator().notificationOccurred(.success)
                             }
                         
-                    } else {
-                        Image(systemName: "text.viewfinder")
-                            .resizable()
-                            .frame(width: 48, height: 48)
-                            .symbolEffect(
-                                .pulse,
-                                isActive: true
-                            )
-                            .padding(10)
-                    }
-                    Text(foundObject ? "Found!" : "Looking for cabinet").font(.callout)
-                }
+                    }                 }
             }
             
             VStack {
-                NavigationLink(destination: TaskExecutionView()) {
-                    Button("Start", action: {
-                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                        self.isCardPresented = false
-                        isNavigationActive = true
-                    })
+                NavigationLink(destination: TaskExecutionView(taskDescription: task.description, taskAssignment: task.assignment)) {
+                    Text("Next")
                 }.buttonStyle(SOCActionButton()).disabled(!foundObject)
-//                Button("Start", action: {
-//                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
-//                    self.isCardPresented = false
-                ////                    presentationMode.wrappedValue.dismiss()
-//                    isNavigationActive = true
-//
-//                }).buttonStyle(SOCActionButton()).disabled(!foundObject)
                 
                 Button("Cancel", action: {
                     UIImpactFeedbackGenerator(style: .light).impactOccurred()

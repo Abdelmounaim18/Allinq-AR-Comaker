@@ -60,6 +60,7 @@ class ARSessionManager: NSObject, ARSessionDelegate {
     }
 
     private func startClassification(findObjectName: Binding<String?>, foundObject: Binding<Bool>) {
+        arView.addCoaching()
         timer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { [self] _ in
             visionRequest(findObjectName: findObjectName, foundObject: foundObject)
         }
@@ -85,7 +86,9 @@ class ARSessionManager: NSObject, ARSessionDelegate {
 
             DispatchQueue.main.async {
                 if observation.identifier.lowercased() == findObjectName.wrappedValue?.lowercased() && !foundObject.wrappedValue {
-                    self.stopSession()
+//                    self.stopSession()
+                    self.stopTimer()
+                    self.stopVision()
                     findObjectName.wrappedValue = observation.identifier
                     foundObject.wrappedValue = true
 
@@ -104,5 +107,21 @@ class ARSessionManager: NSObject, ARSessionDelegate {
         DispatchQueue.main.async {
             try! imageRequestHandler.perform(self.visionRequests)
         }
+    }
+}
+
+extension ARView: ARCoachingOverlayViewDelegate {
+    func addCoaching() {
+        let coachingOverlay = ARCoachingOverlayView()
+        coachingOverlay.delegate = self
+        #if !targetEnvironment(simulator)
+        coachingOverlay.session = session
+        #endif
+        coachingOverlay.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        addSubview(coachingOverlay)
+    }
+
+    public func coachingOverlayViewDidDeactivate(_ coachingOverlayView: ARCoachingOverlayView) {
+        print("did deactivate")
     }
 }

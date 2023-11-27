@@ -6,64 +6,109 @@
 //
 //
 
+import ARKit
 import RealityKit
 import SwiftUI
 
 struct TaskExecutionView: View {
+    @State var taskDescription: String
+    @State var taskAssignment: [String]
+
     var body: some View {
-        ZStack {
-            TaskNavigationBar()
-        }
+        TaskNavigationBar(taskDescription: taskDescription, taskAssignment: taskAssignment)
     }
 }
 
 struct TaskNavigationBar: View {
     @State var findObjectIndex: Int = 0
     @State var foundObject: Bool = false
+    @State var taskDescription: String
+    @State var taskAssignment: [String]
     @State private var currentObjectName: String? = ""
+
+    @State var taskStarted: Bool = false
+
     @Environment(\.presentationMode) var presentationMode
-    let findObjectNames = ["Cabinets", "PowerSupply", "Cable", "PowerConnector", "PowerModule"]
 
     var body: some View {
         ZStack {
             NavigationStack {
-                ARTaskExecutionView(findObjectName: $currentObjectName, foundObject: $foundObject)
-                    .ignoresSafeArea()
-                    .onAppear {
-                        self.foundObject = false
-                        self.currentObjectName = self.findObjectNames[self.findObjectIndex]
-                        ARSessionManager.shared.startSession(findObjectName: self.$currentObjectName, foundObject: self.$foundObject)
-                    }
-                    .onDisappear {
-                        self.foundObject = false
-                        ARSessionManager.shared.stopSession()
-                    }
+                ZStack {
+                    ARTaskExecutionView(findObjectName: $currentObjectName, foundObject: $foundObject)
+                        .ignoresSafeArea()
+                        .onAppear {
+                            self.foundObject = false
+                            self.currentObjectName = self.taskAssignment[self.findObjectIndex]
+                            taskStarted = false
+                        }
+                        .onDisappear {
+                            self.foundObject = false
+                            ARSessionManager.shared.stopSession()
+                        }.blur(radius: !taskStarted ? 25 : 0)
+
+                    VStack {
+                        Spacer()
+                        Image(systemName: "livephoto.play")
+                            .resizable()
+                            .frame(width: 48, height: 48)
+                            .symbolRenderingMode(.hierarchical)
+                            .foregroundStyle(.white)
+                            .symbolEffect(
+                                .pulse,
+                                isActive: true
+                            )
+                            .padding(25)
+                        Text(taskDescription)
+
+                        Spacer()
+
+                        Button(action: {
+                            taskStarted = true
+                            ARSessionManager.shared.startSession(findObjectName: self.$currentObjectName, foundObject: self.$foundObject)
+                        }) {
+                            Text("Start")
+                                .padding()
+                                .font(.headline)
+                                .foregroundColor(.white)
+                        }.buttonStyle(.borderedProminent).tint(Color.blue)
+                    }.opacity(taskStarted ? 0 : 1)
+                }
             }
             .safeAreaInset(edge: .top) {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
                         Text("Task")
                             .font(.largeTitle.weight(.bold))
+
                         Spacer()
-                        Button(action: {
-                            ARSessionManager.shared.startSession(findObjectName: self.$currentObjectName, foundObject: self.$foundObject)
-                            self.foundObject = false
-                        }) {
-                            Image(systemName: "arrow.triangle.2.circlepath").font(.system(size: 25)).foregroundColor(.blue)
-                        }
-                        Button(action: {
-                            self.moveToNextObject()
-                        }) {
-                            Image(systemName: "arrow.right.circle").font(.system(size: 25)).foregroundColor(.green)
-                        }
-                        Button(action: {
-                            presentationMode.wrappedValue.dismiss()
-                        }) {
-                            Image(systemName: "xmark.circle").font(.system(size: 25)).foregroundColor(.red)
+
+                        Menu {
+                            Button(action: {
+                                ARSessionManager.shared.startSession(findObjectName: self.$currentObjectName, foundObject: self.$foundObject)
+                                self.foundObject = false
+                                self.findObjectIndex = 0
+                            }) {
+                                Label("Restart session", systemImage: "arrow.triangle.2.circlepath")
+                            }
+
+                            Button(action: {
+                                self.moveToNextObject()
+                            }) {
+                                Label("Skip step", systemImage: "arrow.right.circle")
+                            }
+
+                            Button(role: .destructive, action: {
+                                presentationMode.wrappedValue.dismiss()
+                            }) {
+                                Label("End task", systemImage: "xmark.circle")
+                            }
+                        } label: {
+                            Image(systemName: "ellipsis.circle").font(.system(size: 25)).foregroundColor(.white)
                         }
                     }
+                    Text(taskDescription)
 
-                    ProgressBar(findObjectNames: findObjectNames, progress: Double(findObjectIndex) / Double(findObjectNames.count))
+                    ProgressBar(findObjectNames: taskAssignment, progress: Double(findObjectIndex) / Double(taskAssignment.count))
                         .padding(.vertical, 8)
 
                     HStack {
@@ -74,6 +119,7 @@ struct TaskNavigationBar: View {
                 }
                 .padding()
                 .background(.ultraThinMaterial)
+                .blur(radius: !taskStarted ? 25 : 0)
             }
             .navigationBarHidden(true)
             .tint(.white)
@@ -88,8 +134,8 @@ struct TaskNavigationBar: View {
                             .padding()
                             .font(.headline)
                             .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                    }.buttonStyle(.borderedProminent).tint(.green)
+                    }.buttonStyle(.borderedProminent).tint(Color.blue
+                        .opacity(0.95))
                 }
             }
             .padding()
@@ -99,8 +145,8 @@ struct TaskNavigationBar: View {
     private func moveToNextObject() {
         foundObject = false
         findObjectIndex += 1
-        if findObjectIndex < findObjectNames.count {
-            currentObjectName = findObjectNames[findObjectIndex]
+        if findObjectIndex < taskAssignment.count {
+            currentObjectName = taskAssignment[findObjectIndex]
             ARSessionManager.shared.startSession(findObjectName: $currentObjectName, foundObject: $foundObject)
         } else {
             currentObjectName = "END OF LIST"
@@ -164,5 +210,5 @@ extension Comparable {
 }
 
 #Preview {
-    TaskExecutionView()
+    TaskExecutionView(taskDescription: "This is the task description", taskAssignment: ["Cabinets", "PowerSupply", "PowerConnector", "Cabinets"])
 }

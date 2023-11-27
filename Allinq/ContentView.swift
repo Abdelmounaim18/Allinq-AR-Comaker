@@ -33,7 +33,7 @@ struct ContentView: View {
 
 struct HomeCard: View {
     var body: some View {
-        NavigationLink(destination: TaskExecutionView()) {
+        NavigationLink(destination: HomeView()) {
             CardView(label: "Home", systemImage: "house")
         }
     }
