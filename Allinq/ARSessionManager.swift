@@ -13,7 +13,7 @@ import Vision
 
 // MARK: - ARSession Manager
 
-// This class is responsible for starting and stopping the ARSession.
+///This class is responsible for starting and stopping the ARSession.
 class ARSessionManager: NSObject, ARSessionDelegate {
     static let shared = ARSessionManager()
     let log = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "ARSessionManager")
@@ -34,7 +34,11 @@ class ARSessionManager: NSObject, ARSessionDelegate {
 
     // MARK: - Start Session
 
-    // This method starts the ARSession and the classification request.
+    
+    /// This method starts the ARSession and the classification request.
+    /// - Parameters:
+    ///   - findObjectName: Name of object to be found.
+    ///   - foundObject: Boolean if object was found.
     func startSession(findObjectName: Binding<String?>, foundObject: Binding<Bool>) {
         stopSession()
 
@@ -49,7 +53,7 @@ class ARSessionManager: NSObject, ARSessionDelegate {
 
     // MARK: - Stop Session
 
-    // This method stops the ARSession and the classification request.
+    /// This method stops all procceses related to the ARSession and stops the classification request.
     func stopSession() {
         session?.pause()
         arView.session.pause()
@@ -79,14 +83,17 @@ class ARSessionManager: NSObject, ARSessionDelegate {
 
     // MARK: - Classification Timer
 
-    // This timer is responsible for starting the classification request every 2 seconds.
-    private func startClassification(findObjectName: Binding<String?>, foundObject: Binding<Bool>) {
+    /// The startClassification() sets a timer, responsible for sending the classification request every 2 seconds.
+
+     private func startClassification(findObjectName: Binding<String?>, foundObject: Binding<Bool>) {
         arView.addCoaching()
         timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { [self] _ in
             visionRequest(findObjectName: findObjectName, foundObject: foundObject)
         }
     }
-
+    
+    /// Adds box to scene at given position.
+    /// - Parameter position: SIMD3 Position of box.
     private func addBox(at position: SIMD3<Float>) {
         let sphereMesh = MeshResource.generateSphere(radius: 0.05)
         let sphereEntity = ModelEntity(mesh: sphereMesh)
@@ -103,7 +110,8 @@ class ARSessionManager: NSObject, ARSessionDelegate {
 
     // MARK: - Raycasting
 
-    // This method performs a raycast from the center of the screen.
+    /// This method performs a raycast from the center of the screen.
+    /// - Returns: ARRaycastResult
     private func performRaycasting() -> ARRaycastResult? {
         guard arView.session.currentFrame != nil else { return nil }
 
@@ -118,8 +126,11 @@ class ARSessionManager: NSObject, ARSessionDelegate {
 
     // MARK: - Vision Classification Request
 
-    // This method creates a classification request using the Vision framework. It is responsible for detecting the object in the camera feed.
-    private func visionRequest(findObjectName: Binding<String?>, foundObject: Binding<Bool>) {
+    /// This method creates a classification request using the Vision framework. It is responsible for detecting the object in the camera feed.
+    /// - Parameters:
+    ///   - findObjectName: name of object to be found.
+    ///   - foundObject: boolean if object was found.
+    func visionRequest(findObjectName: Binding<String?>, foundObject: Binding<Bool>) {
         guard let currentFrame = arView.session.currentFrame else { return }
 
         let buffer = currentFrame.capturedImage
@@ -172,8 +183,9 @@ class ARSessionManager: NSObject, ARSessionDelegate {
 
 // MARK: - ARCoachingOverlayViewDelegate
 
-// This extension is responsible for adding the coaching overlay to the ARView.
+
 extension ARView: ARCoachingOverlayViewDelegate {
+    /// Adds coaching overlay to ARView.
     func addCoaching() {
         let coachingOverlay = ARCoachingOverlayView()
         coachingOverlay.delegate = self

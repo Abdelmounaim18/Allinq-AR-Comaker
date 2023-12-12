@@ -130,6 +130,7 @@ struct TaskNavigationBar: View {
                     Button(action: {
                         self.moveToNextObject()
                     }) {
+                        
                         Text("Next Step")
                             .padding()
                             .font(.headline)
@@ -180,7 +181,6 @@ struct ARTaskExecutionView: UIViewRepresentable {
 
     func updateUIView(_ uiView: ARView, context: Context) {
         if findObjectName != nil {
-            // Do something with the current object name
         }
     }
 
