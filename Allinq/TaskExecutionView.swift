@@ -92,11 +92,11 @@ struct TaskNavigationBar: View {
                                 self.foundObject = false
                                 self.findObjectIndex = 0
                             }) {
-                                Label("Restart session", systemImage: "arrow.triangle.2.circlepath")
+                                Label("Start over", systemImage: "arrow.triangle.2.circlepath")
                             }
 
                             Button(action: {
-                                self.moveToNextObject()
+                                isCardPresented = true
                             }) {
                                 Label("Skip step", systemImage: "arrow.right.circle")
                             }
@@ -116,9 +116,8 @@ struct TaskNavigationBar: View {
                         .padding(.vertical, 8)
 
                     HStack {
-                        Text("Find: " + (currentObjectName ?? "nil"))
-                        Spacer()
-                        Text("Found: " + foundObject.description)
+                        Text("Looking for: " + (currentObjectName ?? "nil")).bold()
+                        foundObject ? Label("", systemImage: "arkit").foregroundColor(.green) : Label("", systemImage: "arkit.badge.xmark").foregroundColor(.red)
                     }
                 }
                 .padding()
@@ -147,27 +146,20 @@ struct TaskNavigationBar: View {
             .slideOverCard(isPresented: $isCardPresented) {
                 ZStack {
                     VStack(alignment: .center, spacing: 25) {
-                        VStack {
-                            Text(currentObjectName!).font(.system(size: 28, weight: .bold))
-                            Text(taskAssignment[self.findObjectIndex][1]).font(.system(size: 18, weight: .medium)).multilineTextAlignment(.center)
-                        }
+                        Text(currentObjectName!).font(.system(size: 28, weight: .bold))
 
-                        ZStack {
-                            //
-                        }
+                        Text(taskAssignment[self.findObjectIndex][1]).font(.system(size: 18, weight: .medium)).multilineTextAlignment(.center)
 
-                        VStack {
-                            Button("Done", action: {
-                                UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                                //                            counter += 1
-                                if currentObjectName == "Complete!" {
-                                    presentationMode.wrappedValue.dismiss()
-                                } else {
-                                    self.moveToNextObject()
-                                }
-                                isCardPresented = false
-                            }).buttonStyle(SOCEmptyButton())
-                        }
+                        Button("Done", action: {
+                            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                            if currentObjectName == "Complete!" {
+                                presentationMode.wrappedValue.dismiss()
+                            } else {
+                                self.moveToNextObject()
+                            }
+                            isCardPresented = false
+                        }).buttonStyle(SOCEmptyButton())
+
                     }.frame(height: 240)
                     if currentObjectName == "Complete!" {
                         ConfettiView().ignoresSafeArea()
@@ -178,8 +170,6 @@ struct TaskNavigationBar: View {
     }
 
     func moveToNextObject() {
-        print(taskAssignment)
-
         foundObject = false
         if findObjectIndex < taskAssignment.count - 1 {
             findObjectIndex += 1
@@ -189,7 +179,6 @@ struct TaskNavigationBar: View {
             foundObject = true
             isCardPresented = true
             currentObjectName = "Complete!"
-//            presentationMode.wrappedValue.dismiss()
         }
     }
 }
