@@ -20,6 +20,9 @@
 		8E8473402B0390100096BCBE /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E84733F2B0390100096BCBE /* HomeView.swift */; };
 		8E8473422B0390E80096BCBE /* TasksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8473412B0390E80096BCBE /* TasksView.swift */; };
 		8E8473442B03914C0096BCBE /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8473432B03914C0096BCBE /* SettingsView.swift */; };
+		8EB106FE2B28D0C9008935C0 /* TaskData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB106FD2B28D0C9008935C0 /* TaskData.swift */; };
+		8EB107012B28EBB1008935C0 /* ConfettiView in Frameworks */ = {isa = PBXBuildFile; productRef = 8EB107002B28EBB1008935C0 /* ConfettiView */; };
+		8ECC82EB2B286FB10076A256 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 8ECC82EA2B286FB10076A256 /* ConfettiSwiftUI */; };
 		8EDD14AE2B0B72FA004927C0 /* TaskExecutionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EDD14AD2B0B72FA004927C0 /* TaskExecutionView.swift */; };
 		8EF805E52B0A5C9500DB50B1 /* ARSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF805E42B0A5C9500DB50B1 /* ARSessionManager.swift */; };
 		8EF805E72B0A97DE00DB50B1 /* backup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF805E62B0A97DE00DB50B1 /* backup.swift */; };
@@ -58,6 +61,7 @@
 		8E84733F2B0390100096BCBE /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		8E8473412B0390E80096BCBE /* TasksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksView.swift; sourceTree = "<group>"; };
 		8E8473432B03914C0096BCBE /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		8EB106FD2B28D0C9008935C0 /* TaskData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskData.swift; sourceTree = "<group>"; };
 		8EDD14AD2B0B72FA004927C0 /* TaskExecutionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskExecutionView.swift; sourceTree = "<group>"; };
 		8EF805E42B0A5C9500DB50B1 /* ARSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSessionManager.swift; sourceTree = "<group>"; };
 		8EF805E62B0A97DE00DB50B1 /* backup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = backup.swift; sourceTree = "<group>"; };
@@ -68,7 +72,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8ECC82EB2B286FB10076A256 /* ConfettiSwiftUI in Frameworks */,
 				8E6356E82B07B516000A2204 /* SlideOverCard in Frameworks */,
+				8EB107012B28EBB1008935C0 /* ConfettiView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -124,6 +130,7 @@
 				8E8473192B0378A50096BCBE /* Assets.xcassets */,
 				8EF805E62B0A97DE00DB50B1 /* backup.swift */,
 				8E84731B2B0378A50096BCBE /* Preview Content */,
+				8EB106FD2B28D0C9008935C0 /* TaskData.swift */,
 			);
 			path = Allinq;
 			sourceTree = "<group>";
@@ -171,6 +178,8 @@
 			name = Allinq;
 			packageProductDependencies = (
 				8E6356E72B07B516000A2204 /* SlideOverCard */,
+				8ECC82EA2B286FB10076A256 /* ConfettiSwiftUI */,
+				8EB107002B28EBB1008935C0 /* ConfettiView */,
 			);
 			productName = Allinq;
 			productReference = 8E8473122B0378A40096BCBE /* Allinq.app */;
@@ -246,6 +255,8 @@
 			mainGroup = 8E8473092B0378A40096BCBE;
 			packageReferences = (
 				8E6356E62B07B516000A2204 /* XCRemoteSwiftPackageReference "SlideOverCard" */,
+				8ECC82E92B286FB10076A256 /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */,
+				8EB106FF2B28EBB1008935C0 /* XCRemoteSwiftPackageReference "confetti-view" */,
 			);
 			productRefGroup = 8E8473132B0378A40096BCBE /* Products */;
 			projectDirPath = "";
@@ -292,6 +303,7 @@
 				8E8473442B03914C0096BCBE /* SettingsView.swift in Sources */,
 				8E32E01E2B062C19000FB9A5 /* CabinetDetectionView.swift in Sources */,
 				8EF805E72B0A97DE00DB50B1 /* backup.swift in Sources */,
+				8EB106FE2B28D0C9008935C0 /* TaskData.swift in Sources */,
 				8E8473402B0390100096BCBE /* HomeView.swift in Sources */,
 				8EDD14AE2B0B72FA004927C0 /* TaskExecutionView.swift in Sources */,
 				8E8473182B0378A40096BCBE /* ContentView.swift in Sources */,
@@ -644,6 +656,22 @@
 				minimumVersion = 2.1.0;
 			};
 		};
+		8EB106FF2B28EBB1008935C0 /* XCRemoteSwiftPackageReference "confetti-view" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/benlmyers/confetti-view";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.2;
+			};
+		};
+		8ECC82E92B286FB10076A256 /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/simibac/ConfettiSwiftUI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -651,6 +679,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8E6356E62B07B516000A2204 /* XCRemoteSwiftPackageReference "SlideOverCard" */;
 			productName = SlideOverCard;
+		};
+		8EB107002B28EBB1008935C0 /* ConfettiView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8EB106FF2B28EBB1008935C0 /* XCRemoteSwiftPackageReference "confetti-view" */;
+			productName = ConfettiView;
+		};
+		8ECC82EA2B286FB10076A256 /* ConfettiSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8ECC82E92B286FB10076A256 /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */;
+			productName = ConfettiSwiftUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

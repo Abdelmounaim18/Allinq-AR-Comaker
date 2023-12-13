@@ -13,7 +13,7 @@ import Vision
 
 // MARK: - ARSession Manager
 
-///This class is responsible for starting and stopping the ARSession.
+/// This class is responsible for starting and stopping the ARSession.
 class ARSessionManager: NSObject, ARSessionDelegate {
     static let shared = ARSessionManager()
     let log = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "ARSessionManager")
@@ -28,13 +28,12 @@ class ARSessionManager: NSObject, ARSessionDelegate {
 
     override private init() {
         super.init()
-
+        arView.addCoaching()
         arView.session.delegate = self
     }
 
     // MARK: - Start Session
 
-    
     /// This method starts the ARSession and the classification request.
     /// - Parameters:
     ///   - findObjectName: Name of object to be found.
@@ -83,15 +82,21 @@ class ARSessionManager: NSObject, ARSessionDelegate {
 
     // MARK: - Classification Timer
 
-    /// The startClassification() sets a timer, responsible for sending the classification request every 2 seconds.
+    /// The startClassification() sets a timer, responsible for sending the classification request every 3 seconds.
 
-     private func startClassification(findObjectName: Binding<String?>, foundObject: Binding<Bool>) {
-        arView.addCoaching()
-        timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { [self] _ in
+    private func startClassification(findObjectName: Binding<String?>, foundObject: Binding<Bool>) {
+//        arView.addCoaching()
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] _ in
+            if let raycastResult = self.performRaycasting() {
+                self.detectedObjectPosition = SIMD3<Float>(raycastResult.worldTransform.columns.3.x,
+                                                           raycastResult.worldTransform.columns.3.y,
+                                                           raycastResult.worldTransform.columns.3.z)
+                os_log("raycastResult: %@", log: self.log, type: .debug, raycastResult)
+            }
             visionRequest(findObjectName: findObjectName, foundObject: foundObject)
         }
     }
-    
+
     /// Adds box to scene at given position.
     /// - Parameter position: SIMD3 Position of box.
     private func addBox(at position: SIMD3<Float>) {
@@ -130,9 +135,9 @@ class ARSessionManager: NSObject, ARSessionDelegate {
     /// - Parameters:
     ///   - findObjectName: name of object to be found.
     ///   - foundObject: boolean if object was found.
-    func visionRequest(findObjectName: Binding<String?>, foundObject: Binding<Bool>) {
+    private func visionRequest(findObjectName: Binding<String?>, foundObject: Binding<Bool>) {
         guard let currentFrame = arView.session.currentFrame else { return }
-
+        var boxPlaced = false
         let buffer = currentFrame.capturedImage
         let visionModel = try! VNCoreMLModel(for: AllinqImageClassifier().model)
         let request = VNCoreMLRequest(model: visionModel) { request, error in
@@ -146,21 +151,30 @@ class ARSessionManager: NSObject, ARSessionDelegate {
             os_log("findObjectName: %@, foundObject: %d, detectedObject: %@ (%.0f%)", log: self.log, type: .debug, findObjectName.wrappedValue ?? "nil", foundObject.wrappedValue, observation.identifier, observation.confidence * 100)
             #endif
 
+
             DispatchQueue.main.async {
                 if observation.identifier.lowercased() == findObjectName.wrappedValue?.lowercased() && !foundObject.wrappedValue {
-                    self.stopTimer()
-                    self.stopVision()
-                    findObjectName.wrappedValue = observation.identifier
-                    foundObject.wrappedValue = true
-
                     if let raycastResult = self.performRaycasting() {
                         self.detectedObjectPosition = SIMD3<Float>(raycastResult.worldTransform.columns.3.x,
                                                                    raycastResult.worldTransform.columns.3.y,
                                                                    raycastResult.worldTransform.columns.3.z)
                     }
 
+//                    if let position = self.detectedObjectPosition {
+//                        self.addBox(at: position)
+//                        boxPlaced = true
+//                    }
+
                     if let position = self.detectedObjectPosition {
                         self.addBox(at: position)
+                        boxPlaced = true
+                    }
+
+                    if boxPlaced {
+                        self.stopTimer()
+                        self.stopVision()
+                        findObjectName.wrappedValue = observation.identifier
+                        foundObject.wrappedValue = true
                     }
 
                     #if DEBUG
@@ -183,7 +197,6 @@ class ARSessionManager: NSObject, ARSessionDelegate {
 
 // MARK: - ARCoachingOverlayViewDelegate
 
-
 extension ARView: ARCoachingOverlayViewDelegate {
     /// Adds coaching overlay to ARView.
     func addCoaching() {
@@ -192,6 +205,7 @@ extension ARView: ARCoachingOverlayViewDelegate {
         #if !targetEnvironment(simulator)
         coachingOverlay.session = session
         #endif
+        coachingOverlay.goal = .horizontalPlane
         coachingOverlay.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         addSubview(coachingOverlay)
     }

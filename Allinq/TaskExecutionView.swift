@@ -7,12 +7,14 @@
 //
 
 import ARKit
+import ConfettiView
 import RealityKit
+import SlideOverCard
 import SwiftUI
 
 struct TaskExecutionView: View {
     @State var taskDescription: String
-    @State var taskAssignment: [String]
+    @State var taskAssignment: [[String]]
 
     var body: some View {
         TaskNavigationBar(taskDescription: taskDescription, taskAssignment: taskAssignment)
@@ -23,8 +25,10 @@ struct TaskNavigationBar: View {
     @State var findObjectIndex: Int = 0
     @State var foundObject: Bool = false
     @State var taskDescription: String
-    @State var taskAssignment: [String]
+    @State var taskAssignment: [[String]]
     @State private var currentObjectName: String? = ""
+    @State private var counter: Int = 3
+    @State var isCardPresented: Bool = false
 
     @State var taskStarted: Bool = false
 
@@ -38,7 +42,7 @@ struct TaskNavigationBar: View {
                         .ignoresSafeArea()
                         .onAppear {
                             self.foundObject = false
-                            self.currentObjectName = self.taskAssignment[self.findObjectIndex]
+                            self.currentObjectName = self.taskAssignment[self.findObjectIndex][0]
                             taskStarted = false
                         }
                         .onDisappear {
@@ -128,10 +132,10 @@ struct TaskNavigationBar: View {
                 Spacer()
                 if foundObject {
                     Button(action: {
-                        self.moveToNextObject()
+                        isCardPresented = true
+
                     }) {
-                        
-                        Text("Next Step")
+                        Text("Show details")
                             .padding()
                             .font(.headline)
                             .foregroundColor(.white)
@@ -140,24 +144,58 @@ struct TaskNavigationBar: View {
                 }
             }
             .padding()
+            .slideOverCard(isPresented: $isCardPresented) {
+                ZStack {
+                    VStack(alignment: .center, spacing: 25) {
+                        VStack {
+                            Text(currentObjectName!).font(.system(size: 28, weight: .bold))
+                            Text(taskAssignment[self.findObjectIndex][1]).font(.system(size: 18, weight: .medium)).multilineTextAlignment(.center)
+                        }
+
+                        ZStack {
+                            //
+                        }
+
+                        VStack {
+                            Button("Done", action: {
+                                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                                //                            counter += 1
+                                if currentObjectName == "Complete!" {
+                                    presentationMode.wrappedValue.dismiss()
+                                } else {
+                                    self.moveToNextObject()
+                                }
+                                isCardPresented = false
+                            }).buttonStyle(SOCEmptyButton())
+                        }
+                    }.frame(height: 240)
+                    if currentObjectName == "Complete!" {
+                        ConfettiView().ignoresSafeArea()
+                    }
+                }
+            }
         }
     }
 
-    private func moveToNextObject() {
+    func moveToNextObject() {
+        print(taskAssignment)
+
         foundObject = false
-        findObjectIndex += 1
-        if findObjectIndex < taskAssignment.count {
-            currentObjectName = taskAssignment[findObjectIndex]
+        if findObjectIndex < taskAssignment.count - 1 {
+            findObjectIndex += 1
+            currentObjectName = taskAssignment[findObjectIndex][0]
             ARSessionManager.shared.startSession(findObjectName: $currentObjectName, foundObject: $foundObject)
         } else {
-            currentObjectName = "END OF LIST"
-            print("Einde van de lijst bereikt")
+            foundObject = true
+            isCardPresented = true
+            currentObjectName = "Complete!"
+//            presentationMode.wrappedValue.dismiss()
         }
     }
 }
 
 struct ProgressBar: View {
-    let findObjectNames: [String]
+    let findObjectNames: [[String]]
     let progress: Double
 
     var body: some View {
@@ -180,8 +218,7 @@ struct ARTaskExecutionView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: ARView, context: Context) {
-        if findObjectName != nil {
-        }
+        if findObjectName != nil {}
     }
 
     func makeCoordinator() -> Coordinator {
@@ -210,5 +247,5 @@ extension Comparable {
 }
 
 #Preview {
-    TaskExecutionView(taskDescription: "This is the task description", taskAssignment: ["Cabinets", "PowerSupply", "PowerConnector", "Cabinets"])
+    TaskExecutionView(taskDescription: "This is the task description", taskAssignment: [["Cable", "Unplug the cable from the switch"], ["Cable", "Plug-in new cable to the switch"], ["Cabinets", "Close the cabinet"]])
 }

@@ -8,6 +8,7 @@
 import SwiftUI
 
 @main
+/// AllinqApp is the main entry point of the app.
 struct AllinqApp: App {
     var body: some Scene {
         WindowGroup {

@@ -8,17 +8,18 @@
 import SlideOverCard
 import SwiftUI
 
-struct Task: Identifiable {
-    var id = UUID()
-    var title: String
-    var icon: String
-    var description: String
-    var imageName: String
-    var assignment: [String]
-}
+//struct Task: Identifiable {
+//    var id = UUID()
+//    var title: String
+//    var icon: String
+//    var description: String
+//    var imageName: String
+//    var assignment: [String]
+//}
 
 // MARK: - TaskView + Task Items
 
+/// Resembles the view of all tasks.
 struct TasksView: View {
     @State private var screenWidth = UIScreen.main.bounds.width
     @State private var selectedTask: Task? = nil
@@ -28,45 +29,47 @@ struct TasksView: View {
         UINotificationFeedbackGenerator().notificationOccurred(style)
     }
     
-    var tasks: [Task] = [
-        Task(
-            title: "Cable Swap",
-            icon: "cable.coaxial",
-            description: "Replacing A FibreOptic Cable",
-            imageName: "cableSwap",
-            assignment: ["Cable", "Cable", "Cabinets"]
-            
-        ),
-        Task(
-            title: "Patch Panel",
-            icon: "xserve",
-            description: "Installation of Patch Panel",
-            imageName: "patchPanelInstall",
-            assignment: ["Cabinets", "PowerSupply", "PowerConnector", "Cabinets"]
-        ),
-        Task(
-            title: "Fibre Switch",
-            icon: "server.rack",
-            description: "Adding Fibre Switch",
-            imageName: "fibreSwitch",
-            assignment: ["Cable", "PowerConnector", "Cable", "Cabinets"]
-        ),
-        Task(
-            title: "Cabinet",
-            icon: "power.circle",
-            description: "Turn Off Cabinet For Maintenance",
-            imageName: "psuRack",
-            assignment: ["PowerSupply", "Cabinets"]
-        ),
-        Task(
-            title: "Power Strip",
-            icon: "poweroutlet.strip",
-            description: "Connect Module to Power Grid",
-            imageName: "powerStrip",
-            assignment: ["Cabinets", "PowerSupply", "Cable", "PowerConnector", "Cable", "Cabinets"]
-        ),
-    ]
+//    /// Array containing task data.
+//    var tasks: [Task] = [
+//        Task(
+//            title: "Cable Swap",
+//            icon: "cable.coaxial",
+//            description: "Replacing A FibreOptic Cable",
+//            imageName: "cableSwap",
+//            assignment: ["Cable", "Cable", "Cabinets"]
+//
+//        ),
+//        Task(
+//            title: "Patch Panel",
+//            icon: "xserve",
+//            description: "Installation of Patch Panel",
+//            imageName: "patchPanelInstall",
+//            assignment: ["Cabinets", "PowerSupply", "Cable", "Cabinets"]
+//        ),
+//        Task(
+//            title: "Fibre Switch",
+//            icon: "server.rack",
+//            description: "Adding Fibre Switch",
+//            imageName: "fibreSwitch",
+//            assignment: ["Cable", "PowerModule", "Cable", "Cabinets"]
+//        ),
+//        Task(
+//            title: "Cabinet",
+//            icon: "power.circle",
+//            description: "Turn Off Cabinet For Maintenance",
+//            imageName: "psuRack",
+//            assignment: ["PowerSupply", "Cabinets"]
+//        ),
+//        Task(
+//            title: "Power Strip",
+//            icon: "poweroutlet.strip",
+//            description: "Connect Module to Power Grid",
+//            imageName: "powerStrip",
+//            assignment: ["Cabinets", "PowerSupply", "Cable", "Cable", "Cabinets"]
+//        ),
+//    ]
     
+    /// Task body
     var body: some View {
         ZStack {
             Image("Background")
@@ -102,6 +105,7 @@ struct TasksView: View {
 
 // MARK: - Task Card
 
+/// TaskCard is the view that represents the blueprint of a task card.
 struct TaskCard: View {
     var task: Task
     
@@ -146,6 +150,7 @@ struct TaskCard: View {
 
 // MARK: - Card SlideOver
 
+/// SlideOver view for  task card details. This view is presented when a task card is tapped and starts the cabinet detection view.
 struct TaskDetailView: View {
     @State private var isNavigationActive: Bool = false
     @Binding var isCardPresented: Bool
@@ -185,8 +190,8 @@ struct TaskDetailView: View {
                             .onAppear {
                                 UINotificationFeedbackGenerator().notificationOccurred(.success)
                             }
-                        
-                    }                 }
+                    }
+                }
             }
             
             VStack {

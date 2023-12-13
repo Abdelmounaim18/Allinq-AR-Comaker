@@ -8,6 +8,7 @@
 import SwiftUI
 import UIKit
 
+/// ContentView is the main view of the app. It contains cards to navigate to the other views. Acting as a navigation controller.
 struct ContentView: View {
     var body: some View {
         NavigationView {
@@ -31,6 +32,7 @@ struct ContentView: View {
     }
 }
 
+/// Navigates to the HomeView.
 struct HomeCard: View {
     var body: some View {
         NavigationLink(destination: HomeView()) {
@@ -39,6 +41,7 @@ struct HomeCard: View {
     }
 }
 
+/// Navigates to the TasksView.
 struct TasksCard: View {
     var body: some View {
         NavigationLink(destination: TasksView()) {
@@ -47,6 +50,7 @@ struct TasksCard: View {
     }
 }
 
+/// Navigates to the SettingsView.
 struct SettingsCard: View {
     var body: some View {
         NavigationLink(destination: SettingsView()) {
@@ -55,6 +59,7 @@ struct SettingsCard: View {
     }
 }
 
+/// CardView is a view that represents a card with a title and a system image. That is used as a blueprint for the cards in the ContentView.
 struct CardView: View {
     var label: String
     var systemImage: String

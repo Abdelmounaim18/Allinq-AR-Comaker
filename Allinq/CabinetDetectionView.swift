@@ -11,6 +11,7 @@ import SwiftUI
 
 // MARK: - CabinetDetectionView
 
+/// Initial view when selecting task, to validate user is at the right location.
 struct CabinetDetectionView: View {
     @Binding var findObjectName: String?
     @Binding var foundObject: Bool
@@ -31,6 +32,11 @@ struct CabinetDetectionView: View {
 
 // MARK: - CabinetViewContainer
 
+
+/// ViewContainer containing the ARView.
+/// - Parameters:
+///  - findObjectName: Name of object to be found.
+///  - foundObject: Boolean if object was found.
 struct CabinetViewContainer: UIViewRepresentable {
     @Binding var findObjectName: String?
     @Binding var foundObject: Bool
