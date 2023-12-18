@@ -12,6 +12,9 @@ import RealityKit
 import SlideOverCard
 import SwiftUI
 
+/// - Parameters:
+///   - taskDescription: The description of the task.
+///   - taskAssignment: A two-dimensional array representing the task assignments, where each subarray contains the object name and corresponding task details.
 struct TaskExecutionView: View {
     @State var taskDescription: String
     @State var taskAssignment: [[String]]
@@ -21,18 +24,23 @@ struct TaskExecutionView: View {
     }
 }
 
+/// Navigation bar for task execution view.
+/// - Parameters:
+///   - findObjectIndex: The index of the currently found object in the task assignment.
+///   - foundObject: A boolean indicating whether the current object has been found.
+///   - taskDescription: The description of the task.
+///   - taskAssignment: A two-dimensional array representing the task assignments, where each subarray contains the object name and corresponding task details.
 struct TaskNavigationBar: View {
     @State var findObjectIndex: Int = 0
     @State var foundObject: Bool = false
     @State var taskDescription: String
     @State var taskAssignment: [[String]]
-    @State private var currentObjectName: String? = ""
-    @State private var counter: Int = 3
+    @State var currentObjectName: String? = ""
     @State var isCardPresented: Bool = false
-
     @State var taskStarted: Bool = false
-
     @Environment(\.presentationMode) var presentationMode
+
+    // MARK: - Task execution view
 
     var body: some View {
         ZStack {
@@ -71,13 +79,17 @@ struct TaskNavigationBar: View {
                             ARSessionManager.shared.startSession(findObjectName: self.$currentObjectName, foundObject: self.$foundObject)
                         }) {
                             Text("Start")
-                                .padding()
+                                .padding(10)
                                 .font(.headline)
                                 .foregroundColor(.white)
+                                .frame(width: 120)
                         }.buttonStyle(.borderedProminent).tint(Color.blue)
                     }.opacity(taskStarted ? 0 : 1)
                 }
             }
+
+            // MARK: - Task navigation bar
+
             .safeAreaInset(edge: .top) {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
@@ -100,7 +112,6 @@ struct TaskNavigationBar: View {
                             }) {
                                 Label("Skip step", systemImage: "arrow.right.circle")
                             }
-
                             Button(role: .destructive, action: {
                                 presentationMode.wrappedValue.dismiss()
                             }) {
@@ -127,6 +138,8 @@ struct TaskNavigationBar: View {
             .navigationBarHidden(true)
             .tint(.white)
 
+            // MARK: - Task assignment card
+
             VStack {
                 Spacer()
                 if foundObject {
@@ -134,10 +147,11 @@ struct TaskNavigationBar: View {
                         isCardPresented = true
 
                     }) {
-                        Text("Show details")
-                            .padding()
+                        Text(currentObjectName == "Complete!" ? "Finish" : "Show details")
+                            .padding(10)
                             .font(.headline)
                             .foregroundColor(.white)
+                            .frame(width: 140)
                     }.buttonStyle(.borderedProminent).tint(Color.blue
                         .opacity(0.95))
                 }
@@ -150,7 +164,7 @@ struct TaskNavigationBar: View {
 
                         Text(taskAssignment[self.findObjectIndex][1]).font(.system(size: 18, weight: .medium)).multilineTextAlignment(.center)
 
-                        Button("Done", action: {
+                        Button(action: {
                             UIImpactFeedbackGenerator(style: .light).impactOccurred()
                             if currentObjectName == "Complete!" {
                                 presentationMode.wrappedValue.dismiss()
@@ -158,7 +172,14 @@ struct TaskNavigationBar: View {
                                 self.moveToNextObject()
                             }
                             isCardPresented = false
-                        }).buttonStyle(SOCEmptyButton())
+
+                        }) {
+                            Text("Done")
+                                .padding(10)
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .frame(width: 120)
+                        }.buttonStyle(.borderedProminent).tint(Color.blue)
 
                     }.frame(height: 240)
                     if currentObjectName == "Complete!" {
@@ -179,9 +200,12 @@ struct TaskNavigationBar: View {
             foundObject = true
             isCardPresented = true
             currentObjectName = "Complete!"
+            taskAssignment[findObjectIndex][1] = "Press 'Done' to end the task."
         }
     }
 }
+
+// MARK: - Progress bar
 
 struct ProgressBar: View {
     let findObjectNames: [[String]]
@@ -191,7 +215,7 @@ struct ProgressBar: View {
         HStack(spacing: 4) {
             ForEach(Array(0 ..< findObjectNames.count), id: \.self) { blockIndex in
                 RoundedRectangle(cornerRadius: 4)
-                    .fill(blockIndex < Int(progress * Double(findObjectNames.count)) ? Color.green : Color.gray)
+                    .fill(blockIndex < Int(progress * Double(findObjectNames.count) + 1) ? Color.green : Color.gray)
                     .frame(height: 8)
             }
         }
@@ -206,9 +230,7 @@ struct ARTaskExecutionView: UIViewRepresentable {
         return ARSessionManager.shared.arView
     }
 
-    func updateUIView(_ uiView: ARView, context: Context) {
-        if findObjectName != nil {}
-    }
+    func updateUIView(_ uiView: ARView, context: Context) {}
 
     func makeCoordinator() -> Coordinator {
         return Coordinator(self, findObjectName: $findObjectName, foundObject: $foundObject)
@@ -226,12 +248,6 @@ struct ARTaskExecutionView: UIViewRepresentable {
             self._findObjectName = findObjectName
             self._foundObject = foundObject
         }
-    }
-}
-
-extension Comparable {
-    func clamped(to limits: ClosedRange<Self>) -> Self {
-        return min(max(self, limits.lowerBound), limits.upperBound)
     }
 }
 

@@ -85,15 +85,15 @@ class ARSessionManager: NSObject, ARSessionDelegate {
     /// The startClassification() sets a timer, responsible for sending the classification request every 3 seconds.
 
     private func startClassification(findObjectName: Binding<String?>, foundObject: Binding<Bool>) {
-//        arView.addCoaching()
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] _ in
             if let raycastResult = self.performRaycasting() {
                 self.detectedObjectPosition = SIMD3<Float>(raycastResult.worldTransform.columns.3.x,
                                                            raycastResult.worldTransform.columns.3.y,
                                                            raycastResult.worldTransform.columns.3.z)
                 os_log("raycastResult: %@", log: self.log, type: .debug, raycastResult)
+                visionRequest(findObjectName: findObjectName, foundObject: foundObject)
             }
-            visionRequest(findObjectName: findObjectName, foundObject: foundObject)
+            
         }
     }
 
@@ -151,7 +151,6 @@ class ARSessionManager: NSObject, ARSessionDelegate {
             os_log("findObjectName: %@, foundObject: %d, detectedObject: %@ (%.0f%)", log: self.log, type: .debug, findObjectName.wrappedValue ?? "nil", foundObject.wrappedValue, observation.identifier, observation.confidence * 100)
             #endif
 
-
             DispatchQueue.main.async {
                 if observation.identifier.lowercased() == findObjectName.wrappedValue?.lowercased() && !foundObject.wrappedValue {
                     if let raycastResult = self.performRaycasting() {
@@ -159,11 +158,6 @@ class ARSessionManager: NSObject, ARSessionDelegate {
                                                                    raycastResult.worldTransform.columns.3.y,
                                                                    raycastResult.worldTransform.columns.3.z)
                     }
-
-//                    if let position = self.detectedObjectPosition {
-//                        self.addBox(at: position)
-//                        boxPlaced = true
-//                    }
 
                     if let position = self.detectedObjectPosition {
                         self.addBox(at: position)
