@@ -32,7 +32,6 @@ struct CabinetDetectionView: View {
 
 // MARK: - CabinetViewContainer
 
-
 /// ViewContainer containing the ARView.
 /// - Parameters:
 ///  - findObjectName: Name of object to be found.
@@ -46,8 +45,7 @@ struct CabinetViewContainer: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: ARView, context: Context) {
-        if findObjectName != nil {
-        }
+        if findObjectName != nil {}
     }
 
     func makeCoordinator() -> Coordinator {

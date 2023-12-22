@@ -104,7 +104,7 @@ struct TaskNavigationBar: View {
                                 self.foundObject = false
                                 self.findObjectIndex = 0
                             }) {
-                                Label("Start over", systemImage: "arrow.triangle.2.circlepath")
+                                Label("Start over", systemImage: "arrow.counterclockwise.circle")
                             }
 
                             Button(action: {
@@ -190,6 +190,7 @@ struct TaskNavigationBar: View {
         }
     }
 
+    /// Moves to the next object in the task assignment.
     func moveToNextObject() {
         foundObject = false
         if findObjectIndex < taskAssignment.count - 1 {

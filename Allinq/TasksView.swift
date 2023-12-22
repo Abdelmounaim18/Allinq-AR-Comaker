@@ -8,15 +8,6 @@
 import SlideOverCard
 import SwiftUI
 
-//struct Task: Identifiable {
-//    var id = UUID()
-//    var title: String
-//    var icon: String
-//    var description: String
-//    var imageName: String
-//    var assignment: [String]
-//}
-
 // MARK: - TaskView + Task Items
 
 /// Resembles the view of all tasks.
@@ -28,46 +19,6 @@ struct TasksView: View {
     func impactFeedback(style: UINotificationFeedbackGenerator.FeedbackType) {
         UINotificationFeedbackGenerator().notificationOccurred(style)
     }
-    
-//    /// Array containing task data.
-//    var tasks: [Task] = [
-//        Task(
-//            title: "Cable Swap",
-//            icon: "cable.coaxial",
-//            description: "Replacing A FibreOptic Cable",
-//            imageName: "cableSwap",
-//            assignment: ["Cable", "Cable", "Cabinets"]
-//
-//        ),
-//        Task(
-//            title: "Patch Panel",
-//            icon: "xserve",
-//            description: "Installation of Patch Panel",
-//            imageName: "patchPanelInstall",
-//            assignment: ["Cabinets", "PowerSupply", "Cable", "Cabinets"]
-//        ),
-//        Task(
-//            title: "Fibre Switch",
-//            icon: "server.rack",
-//            description: "Adding Fibre Switch",
-//            imageName: "fibreSwitch",
-//            assignment: ["Cable", "PowerModule", "Cable", "Cabinets"]
-//        ),
-//        Task(
-//            title: "Cabinet",
-//            icon: "power.circle",
-//            description: "Turn Off Cabinet For Maintenance",
-//            imageName: "psuRack",
-//            assignment: ["PowerSupply", "Cabinets"]
-//        ),
-//        Task(
-//            title: "Power Strip",
-//            icon: "poweroutlet.strip",
-//            description: "Connect Module to Power Grid",
-//            imageName: "powerStrip",
-//            assignment: ["Cabinets", "PowerSupply", "Cable", "Cable", "Cabinets"]
-//        ),
-//    ]
     
     /// Task body
     var body: some View {

@@ -47,7 +47,9 @@ class ARSessionManager: NSObject, ARSessionDelegate {
         session?.run(configuration)
         arView.session.run(configuration)
         startClassification(findObjectName: findObjectName, foundObject: foundObject)
+        #if DEBUG
         os_log("-- Session Started --")
+        #endif
     }
 
     // MARK: - Stop Session
@@ -60,7 +62,9 @@ class ARSessionManager: NSObject, ARSessionDelegate {
         stopTimer()
         stopVision()
         removeAddedBoxes()
+        #if DEBUG
         os_log("-- Session Stopped --")
+        #endif
     }
 
     private func stopVision() {
@@ -83,24 +87,27 @@ class ARSessionManager: NSObject, ARSessionDelegate {
     // MARK: - Classification Timer
 
     /// The startClassification() sets a timer, responsible for sending the classification request every 3 seconds.
-
+    /// - Parameters:
+    ///  - findObjectName: name of object to be found.
+    ///  - foundObject: boolean if object was found.
     private func startClassification(findObjectName: Binding<String?>, foundObject: Binding<Bool>) {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] _ in
             if let raycastResult = self.performRaycasting() {
                 self.detectedObjectPosition = SIMD3<Float>(raycastResult.worldTransform.columns.3.x,
                                                            raycastResult.worldTransform.columns.3.y,
                                                            raycastResult.worldTransform.columns.3.z)
+                #if DEBUG
                 os_log("raycastResult: %@", log: self.log, type: .debug, raycastResult)
+                #endif
                 visionRequest(findObjectName: findObjectName, foundObject: foundObject)
             }
-            
         }
     }
 
     /// Adds box to scene at given position.
     /// - Parameter position: SIMD3 Position of box.
     private func addBox(at position: SIMD3<Float>) {
-        let sphereMesh = MeshResource.generateSphere(radius: 0.05)
+        let sphereMesh = MeshResource.generateSphere(radius: 0.03)
         let sphereEntity = ModelEntity(mesh: sphereMesh)
 
         let material = SimpleMaterial(color: .systemBlue, isMetallic: false)
@@ -205,6 +212,6 @@ extension ARView: ARCoachingOverlayViewDelegate {
     }
 
     public func coachingOverlayViewDidDeactivate(_ coachingOverlayView: ARCoachingOverlayView) {
-        print("did deactivate")
+        os_log("did deactivate")
     }
 }

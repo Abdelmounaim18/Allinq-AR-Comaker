@@ -25,7 +25,6 @@
 		8ECC82EB2B286FB10076A256 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 8ECC82EA2B286FB10076A256 /* ConfettiSwiftUI */; };
 		8EDD14AE2B0B72FA004927C0 /* TaskExecutionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EDD14AD2B0B72FA004927C0 /* TaskExecutionView.swift */; };
 		8EF805E52B0A5C9500DB50B1 /* ARSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF805E42B0A5C9500DB50B1 /* ARSessionManager.swift */; };
-		8EF805E72B0A97DE00DB50B1 /* backup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF805E62B0A97DE00DB50B1 /* backup.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,7 +63,6 @@
 		8EB106FD2B28D0C9008935C0 /* TaskData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskData.swift; sourceTree = "<group>"; };
 		8EDD14AD2B0B72FA004927C0 /* TaskExecutionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskExecutionView.swift; sourceTree = "<group>"; };
 		8EF805E42B0A5C9500DB50B1 /* ARSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSessionManager.swift; sourceTree = "<group>"; };
-		8EF805E62B0A97DE00DB50B1 /* backup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = backup.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,11 +124,10 @@
 				8E84733F2B0390100096BCBE /* HomeView.swift */,
 				8EF805E42B0A5C9500DB50B1 /* ARSessionManager.swift */,
 				8E32E01D2B062C19000FB9A5 /* CabinetDetectionView.swift */,
+				8EB106FD2B28D0C9008935C0 /* TaskData.swift */,
 				8E32E01F2B062C6D000FB9A5 /* AllinqImageClassifier.mlmodel */,
 				8E8473192B0378A50096BCBE /* Assets.xcassets */,
-				8EF805E62B0A97DE00DB50B1 /* backup.swift */,
 				8E84731B2B0378A50096BCBE /* Preview Content */,
-				8EB106FD2B28D0C9008935C0 /* TaskData.swift */,
 			);
 			path = Allinq;
 			sourceTree = "<group>";
@@ -302,7 +299,6 @@
 			files = (
 				8E8473442B03914C0096BCBE /* SettingsView.swift in Sources */,
 				8E32E01E2B062C19000FB9A5 /* CabinetDetectionView.swift in Sources */,
-				8EF805E72B0A97DE00DB50B1 /* backup.swift in Sources */,
 				8EB106FE2B28D0C9008935C0 /* TaskData.swift in Sources */,
 				8E8473402B0390100096BCBE /* HomeView.swift in Sources */,
 				8EDD14AE2B0B72FA004927C0 /* TaskExecutionView.swift in Sources */,

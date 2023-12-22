@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-/// HomeView 
+/// HomeView
 struct HomeView: View {
     var body: some View {
         ZStack {
